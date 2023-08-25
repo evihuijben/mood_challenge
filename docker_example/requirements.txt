@@ -1,0 +1,20 @@
+matplotlib  # TODO delete
+scipy
+nibabel
+
+# lpips==0.1.4
+
+# torch==1.13.1
+#monai[nibabel]==1.1.0
+# pandas
+# tensorboard
+# tqdm
+# einops>=0.3.2
+# omegaconf==2.1.1
+# imageio
+# seaborn
+# scikit-image
+# x-transformers==1.8.1
+# numba
+# medmnist
+

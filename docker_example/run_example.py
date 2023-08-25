@@ -5,6 +5,8 @@ import subprocess
 import sys
 import tempfile
 
+from sys import exit 
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
 
@@ -19,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-i",
         "--input_dir",
-        required=True,
+        default='/mnt/sda/Data/MOOD/brain_toy',
         type=str,
         help="Input dir requires a subfolder 'toy' and 'toy_label' i.e. input_dir/toy, input_dir/toy_label",
     )
@@ -49,9 +51,11 @@ if __name__ == "__main__":
     example_dir = pathlib.Path(__file__).parent.absolute()
 
     print("Building docker...")
-
+    print(f"docker build {example_dir} -t mood_example")
     try:
         # "docker build ${DOCKER_FILE_PATH} -t mood_name"
+        
+        
         ret = subprocess.run(["docker", "build", example_dir, "-t", "mood_example"], check=True)
     except Exception:
         print("Building Docker failed:")
@@ -67,9 +71,10 @@ if __name__ == "__main__":
 
     try:
         docker_str = (
-            f"sudo docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
+            f"docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
             f"-v {output_dir}:/mnt/pred mood_example sh /workspace/run_pixel_brain.sh /mnt/data /mnt/pred"
         )
+        print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
     except Exception:
         print("Running Docker pixel-script failed:")
@@ -80,9 +85,10 @@ if __name__ == "__main__":
 
     try:
         docker_str = (
-            f"sudo docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
+            f"docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
             f"-v {output_dir}:/mnt/pred mood_example sh /workspace/run_sample_brain.sh /mnt/data /mnt/pred"
         )
+        print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
     except Exception:
         print("Running Docker sample-script failed:")

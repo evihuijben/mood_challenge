@@ -22,7 +22,7 @@ def process_file_pixelwise(pred_path, label_path):
     label_appended, pred_appended = False, False
     try:
         label_nimg = nib.load(label_path)
-        label_array = np.rint(label_nimg.get_fdata()).astype(np.int)
+        label_array = np.rint(label_nimg.get_fdata()).astype(np.int32)
 
         # should already be in that interval but just be sure
         label_array = np.clip(label_array, a_max=1, a_min=0)
@@ -32,7 +32,6 @@ def process_file_pixelwise(pred_path, label_path):
         label_appended = True
 
         if os.path.exists(pred_path):
-
             pred_nimg = nib.load(pred_path)
             pred_array = pred_nimg.get_fdata(dtype=np.float16)
 
