@@ -127,6 +127,8 @@ def eval_dir(pred_dir, label_dir, mode="pixel", save_file=None):
     label_file_list = []
 
     for f_name in sorted(os.listdir(label_dir)):
+        
+        print(f'Evaluating {f_name}')
 
         pred_file_path = os.path.join(pred_dir, f_name)
         label_file_path = os.path.join(label_dir, f_name)

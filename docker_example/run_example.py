@@ -1,9 +1,11 @@
+
 import argparse
 import os
 import pathlib
 import subprocess
 import sys
 import tempfile
+
 
 from sys import exit 
 
@@ -21,7 +23,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-i",
         "--input_dir",
-        default='/mnt/sda/Data/MOOD/brain_toy',
+        default='/mnt/sda/Data/MOOD/test_set_docker/brain',
+        # default = '/mnt/sda/Data/MOOD/abdom_toy',
         type=str,
         help="Input dir requires a subfolder 'toy' and 'toy_label' i.e. input_dir/toy, input_dir/toy_label",
     )
@@ -35,6 +38,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    if 'brain' in args.input_dir:
+        region = 'brain'
+    elif 'abdom' in args.input_dir:
+        region = 'abdom'
+        
     data_dir = args.input_dir
     no_gpu = args.no_gpu
 
@@ -72,7 +80,7 @@ if __name__ == "__main__":
     try:
         docker_str = (
             f"docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
-            f"-v {output_dir}:/mnt/pred mood_example sh /workspace/run_pixel_brain.sh /mnt/data /mnt/pred"
+            f"-v {output_dir}:/mnt/pred --read-only mood_example sh /workspace/run_pixel_{region}.sh /mnt/data /mnt/pred"
         )
         print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
@@ -86,7 +94,7 @@ if __name__ == "__main__":
     try:
         docker_str = (
             f"docker run {gpu_str}-v {toy_input_dir}:/mnt/data "
-            f"-v {output_dir}:/mnt/pred mood_example sh /workspace/run_sample_brain.sh /mnt/data /mnt/pred"
+            f"-v {output_dir}:/mnt/pred --read-only mood_example sh /workspace/run_sample_{region}.sh /mnt/data /mnt/pred"
         )
         print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)

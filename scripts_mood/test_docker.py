@@ -7,7 +7,7 @@ import tempfile
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
 
-
+from sys import exit
 if __name__ == "__main__":
 
     import evalresults
@@ -97,6 +97,7 @@ if __name__ == "__main__":
             f"sudo docker run {gpu_str}-v {brain_toy_data_dir}:/mnt/data "
             f"-v {output_brain_dir}:/mnt/pred --read-only {docker_name} sh /workspace/run_{task}_brain.sh /mnt/data /mnt/pred"
         )
+        print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
     except Exception:
         print(f"Running Docker brain-{task}-script failed:")
@@ -110,6 +111,7 @@ if __name__ == "__main__":
             f"sudo docker run {gpu_str}-v {abdom_toy_data_dir}:/mnt/data "
             f"-v {output_abdom_dir}:/mnt/pred --read-only {docker_name} sh /workspace/run_{task}_abdom.sh /mnt/data /mnt/pred"
         )
+        print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
     except Exception:
         print(f"Running Docker abdom-{task}-script failed:")
