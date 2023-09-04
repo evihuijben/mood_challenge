@@ -21,6 +21,7 @@ import time
 import torch
 
 import sys
+sys.path.append('/workspace')
 sys.path.append('docker_example/scripts')
 
 from data import MoodDataModule

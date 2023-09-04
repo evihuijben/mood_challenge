@@ -8,11 +8,16 @@ from torch.cuda.amp import autocast
 # from monai.utils import set_determinism
 import numpy as np
 import os
-import pathlib
+# import pathlib
 import sys
+
+sys.path.append('/workspace/ddpm-ood')
+sys.path.append('/workspace/GenerativeModels')
+
 sys.path.append('docker_example/scripts')
 sys.path.append('docker_example/scripts/ddpm-ood')
 sys.path.append('docker_example/scripts/GenerativeModels')
+
 sys.path.append('ddpm-ood')
 sys.path.append('GenerativeModels')
 
