@@ -11,9 +11,9 @@ import os
 import pathlib
 import sys
 sys.path.append('docker_example/scripts')
-sys.path.append('docker_example/scripts/ddpm-mood')
+sys.path.append('docker_example/scripts/ddpm-ood')
 sys.path.append('docker_example/scripts/GenerativeModels')
-sys.path.append('ddpm-mood')
+sys.path.append('ddpm-ood')
 sys.path.append('GenerativeModels')
 
 from src.trainers.base import BaseTrainer
