@@ -7,3 +7,6 @@
 [submodule "docker_submission/scripts/GenerativeModels"]
 	path = docker_submission/scripts/GenerativeModels
 	url = git@github.com:Project-MONAI/GenerativeModels.git
+[submodule "docker_submission/scripts/ddpm_ood"]
+	path = docker_submission/scripts/ddpm_ood
+	url = git@github.com:evihuijben/ddpm_ood.git
