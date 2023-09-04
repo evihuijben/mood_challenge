@@ -99,6 +99,8 @@ if __name__ == "__main__":
         )
         print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
+        print('succesfull brain')
+        print('output_brain_dir', output_brain_dir, os.listdir(output_brain_dir))
     except Exception:
         print(f"Running Docker brain-{task}-script failed:")
         print(ret)
@@ -113,6 +115,8 @@ if __name__ == "__main__":
         )
         print(docker_str)
         ret = subprocess.run(docker_str.split(" "), check=True,)
+        print('succesfull abdom')
+        print('output_abdom_dir', output_abdom_dir, os.listdir(output_abdom_dir))
     except Exception:
         print(f"Running Docker abdom-{task}-script failed:")
         print(ret)

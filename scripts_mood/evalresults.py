@@ -103,12 +103,19 @@ def eval_list(pred_file_list, label_file_list, mode="pixel"):
     pred_vals = []
 
     for pred_path, label_path in zip(pred_file_list, label_file_list):
+        print('    pred fname', pred_path, os.path.isfile(pred_path))
+        print('    label fname', label_path, os.path.isfile(label_path))
         try:
             if mode == "pixel":
+                print('    processing file pixelwise ....')
                 pred_list, label_list = process_file_pixelwise(pred_path, label_path)
+                print('    pixelwise pred finished')
             elif mode == "sample":
+                print('    processing file samplewise ....')
                 pred_list, label_list = process_file_samplewise(pred_path, label_path)
+                print('    sample pred finished')
             else:
+                print('mode not pixel or sample')
                 pred_list, label_list = []
             pred_vals.append(pred_list)
             label_vals.append(label_list)
