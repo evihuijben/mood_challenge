@@ -1,19 +1,18 @@
+---
+
+# Repository MOOD Challenge - team TUe_IMAGe 
+
+This page contains the code to reproduce the submission of team TUe_IMAGe for the [MICCAI Medical Out-of-Distribution (MOOD) Challenge 2023](http://medicalood.dkfz.de/web/).
+
+This repository is based on [github.com/MIC-DKFZ/mood](https://github.com/MIC-DKFZ/mood), provided by the organizes of the challenge.
+
 _Copyright © German Cancer Research Center (DKFZ), Division of Medical Image Computing (MIC). Please make sure that your usage of this code is in compliance with the code license:_
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/MIC-DKFZ/basic_unet_example/blob/master/LICENSE)
 
----
 
-# MOOD 2020 - Repository
-
-This repo has the supplementary code for the _Medical Out-of-Distribution Analysis Challenge_ at MICCAI 2020.
-
-Also checkout our [Website](http://medicalood.dkfz.de/web/) and [Submission Platform](https://www.synapse.org/mood).
 
 ### Requirements
 
-Please install and use docker for submission: <https://www.docker.com/get-started>
-
-For GPU support you may need to install the NVIDIA Container Toolkit: <https://github.com/NVIDIA/nvidia-docker>
 
 Install python requirements:
 
@@ -21,7 +20,10 @@ Install python requirements:
 pip install -r requirements.txt
 ```
 
-We suggest the following folder structure (to work with our examples):
+To test the docker submission, you need to install [docker](https://www.docker.com/get-started) and [NVIDIA container Toolkit](https://github.com/NVIDIA/nvidia-docker).
+
+
+The organizers suggest the following folder structure to work with the provided examples:
 
 ```
 data/
@@ -29,40 +31,43 @@ data/
 ------ brain_train/
 ------ toy/
 ------ toy_label/
---- colon/
------- colon_train/
+--- abdom/
+------ abdom_train/
 ------ toy/
 ------ toy_label/
 ```
 
-### Run Simple Example
 
-Have a lot at the simple_example in how to build a simple docker, load and write files, and run a simple evaluation.
-After installing the requirements you can also try the simple_example:
+
+## Training
+
+
+...
+
+
+## Inference
+#### Step 1: Add model checkpoints
+Make sure to put the model checkpoints in the directory docker_submission/scripts/checkpoints
+
+#### Step 2: Build Docker and test the model
+
+Build and test the docker by running the following:
 
 ```
-python docker_example/run_example.py -i /data/brain/ --no_gpu False
+python docker_example/run_example.py -i /data/brain
 ```
 
-With `-i` you can pass an input folder (which has to contain a _toy_ and _toy_label_ directory) and with `--no_gpu` you can turn on/off GPU support for the docker (you may need to install the NVIDIA Container Toolkit for docker GPU support).
+With `-i` you should pass the data input folder (which has to contain a _toy_ and _toy_label_ directory).
 
-### Test Your Docker
+#### Step 3: Test the Docker for submission
 
-After you built your docker you can test you docker locally using the toy cases. After submitting your docker, we will also report the toy-test scores on the toy examples back to you, so you can check if your submission was successful and the scores match:
+To check whether the submission complies with the challenge format, run the following:
 
 ```
-python scripts/test_docker.py -d mood_docker -i /data/ -t sample
+python scripts_mood_evaluate/test_docker.py -d mood_example -i /data/ -t sample
 ```
+With `-i` you should pass the base data input folder (which has to contain a folder _brain_ and _abdom_, and both folders have to contain a _toy_ and _toy_label_ directory).
 
-With `-i` you can pass the name of your docker image, with `-i` pass the path to your base*data dir (see \_Requirements*), with `-t` you can define the Challenge Task (either _sample_ or _pixel_), and with `--no_gpu` you can turn on/off GPU support for the docker (you may need to install the NVIDIA Container Toolkit for docker GPU support).
+with `-t` you can define the Challenge Task (either _sample_ or _pixel_)
 
-### Scripts
 
-In the scripts folder you can find:
-
-- `test_docker.py` : The script to test your docker.
-- `evalresults.py` : The script with our evaluation code.
-
-### Example Algorithms
-
-For _'ready to run'_ simple example algorithms checkout the [example_algos](https://github.com/MIC-DKFZ/mood/tree/master/example_algos) folder.
