@@ -288,27 +288,38 @@ class ReconstructMoodSubmission(BaseTrainer):
             ############################
             # easy detection
             ############################
+            print('    Easy local started ...', batch['path'])
             easy_result = self.easy_localization(input_image)
+            print('    Easy local finished. sum=', easy_result.sum() )
+             
             
             # #TODO : remove plot
             # show_image_mask(input_image.squeeze(), easy_result, name)
             if easy_result.any():
+                print('    Easy local found!')
                 if self.config.task == 'brain':
+                    print('returning easy brain result')
                     return easy_result
                 else:
+                    print('returning easy abdom result')
                     return upsample(easy_result)
 
         ############################
         # ddpm detection
         ############################
+        print('    DDPM started ...',  batch['path'])
         ddpm_recon = self.ddpm_localization(batch)
+        print('    DDPM reconstruction finished. Shape=', ddpm_recon.shape, 'min=', ddpm_recon.min(), 'max=', ddpm_recon.max())
         ddpm_result, ssim_map = self.process_reconstruction(input_image.squeeze().cpu().numpy(), ddpm_recon)
+        print('    DDPM reconstruction processed. Shape=',  ddpm_result.shape, 'sum=', ddpm_result.sum(), 'min=', ddpm_result.min(), 'max=', ddpm_result.max())
         
         # #TODO : remove plot
         # show_image_mask_fancy(input_image.squeeze(), ddpm_recon, ssim_map, ddpm_result)
         
         
         if self.config.task == 'brain':
+            print('returning ddpm brain result')
             return ddpm_result
         else:
+            print('returning ddpm abdom result')
             return upsample(ddpm_result)

@@ -26,6 +26,7 @@ class MoodDataModule():
     names = sorted(os.listdir(self.input_dir))
     file_names = [os.path.join(self.input_dir, name) for name in names]
 
+    print('File names test dataloader' ,len(file_names), file_names)
     test_subjects = [tio.Subject(image=tio.ScalarImage(image_path), path=str(image_path)) for image_path in file_names]
     
     test_set = tio.SubjectsDataset(test_subjects, transform=transform)
