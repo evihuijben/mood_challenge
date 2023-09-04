@@ -1,0 +1,3 @@
+[submodule "docker_example/scripts/ddpm-ood"]
+	path = docker_example/scripts/ddpm-ood
+	url = git@github.com:evihuijben/ddpm-mood.git
