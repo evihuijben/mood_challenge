@@ -105,4 +105,5 @@ ENV/
 
 
 
-docker_example/scripts/checkpoints/*
+docker_example/scripts/checkpoints/mood_simplex_ddp_07_12/checkpoint.pth
+docker_example/scripts/checkpoints/mood_simplex_ddp_abdom_08_23/checkpoint.pth
