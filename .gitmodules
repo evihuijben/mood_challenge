@@ -4,3 +4,6 @@
 [submodule "docker_example/scripts/GenerativeModels"]
 	path = docker_example/scripts/GenerativeModels
 	url = git@github.com:Project-MONAI/GenerativeModels.git
+[submodule "docker_submission/scripts/GenerativeModels"]
+	path = docker_submission/scripts/GenerativeModels
+	url = git@github.com:Project-MONAI/GenerativeModels.git
