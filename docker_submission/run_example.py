@@ -15,7 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
 
 if __name__ == "__main__":
 
-    import scripts_mood.evalresults as evalresults
+    import scripts_mood_evaluate.evalresults as evalresults
 
     print("Starting MOOD example...")
 

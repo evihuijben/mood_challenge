@@ -11,14 +11,14 @@ import os
 # import pathlib
 import sys
 
-sys.path.append('/workspace/ddpm-ood')
+sys.path.append('/workspace/ddpm_ood')
 sys.path.append('/workspace/GenerativeModels')
 
 sys.path.append('docker_example/scripts')
-sys.path.append('docker_example/scripts/ddpm-ood')
+sys.path.append('docker_example/scripts/ddpm_ood')
 sys.path.append('docker_example/scripts/GenerativeModels')
 
-sys.path.append('ddpm-ood')
+sys.path.append('ddpm_ood')
 sys.path.append('GenerativeModels')
 
 from src.trainers.base import BaseTrainer

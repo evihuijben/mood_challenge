@@ -4,13 +4,9 @@ import os
 
 def load_config():    
     parser = argparse.ArgumentParser()
-    # parser.add_argument("-i", "--input", required=True, type=str)
-    # parser.add_argument("-o", "--output", required=True, type=str)
-    parser.add_argument("-i", "--input", type=str, default="/mnt/sda/Data/MOOD/brain_toy/toy")
-    parser.add_argument("-region", type=str, default="brain", help="can be either 'brain' or 'abdom'.", required=False)
-    # parser.add_argument("-i", "--input", type=str, default="/mnt/sda/Data/MOOD/abdom_toy/toy")
-    # parser.add_argument("-region", type=str, default="abdom", help="can be either 'brain' or 'abdom'.", required=False)
-    parser.add_argument("-o", "--output", type=str, default="/home/ehuijben/ownCloud2/Code/models/202306_OOD/mood/docker_example/tmp_output")
+    parser.add_argument("-i", "--input", required=True, type=str)
+    parser.add_argument("-o", "--output", required=True, type=str)
+    parser.add_argument("-region", type=str, required=True, help="can be either 'brain' or 'abdom'.")
     parser.add_argument("-mode", type=str, default="pixel", help="can be either 'pixel' or 'sample'.", required=False)
     parser.add_argument("-workspace", type=str, default="/home/ehuijben/ownCloud2/Code/models/202306_OOD/mood/docker_example/scripts")
 
