@@ -17,7 +17,7 @@ _Copyright © German Cancer Research Center (DKFZ), Division of Medical Image Co
 Install python requirements:
 
 ```
-pip install -r requirements.txt
+pip install -r docker_submission/requirements.txt
 ```
 
 To test the docker submission, you need to install [docker](https://www.docker.com/get-started) and [NVIDIA container Toolkit](https://github.com/NVIDIA/nvidia-docker).
@@ -54,7 +54,7 @@ Make sure to put the model checkpoints in the directory docker_submission/script
 Build and test the docker by running the following:
 
 ```
-python docker_example/run_example.py -i /data/brain
+python docker_submission/run_example.py -i /data/brain
 ```
 
 With `-i` you should pass the data input folder (which has to contain a _toy_ and _toy_label_ directory).
