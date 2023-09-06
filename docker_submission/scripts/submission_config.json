@@ -7,7 +7,7 @@
   "image_size": null,
   "latent_pad": null,
   "vqvae_checkpoint": null,
-  "ddpm_checkpoint_epoch": null,
+  "ddpm_checkpoint_epoch": 60,
   "prediction_type": "epsilon",
   "model_type": "small",
   "beta_schedule": "scaled_linear_beta",

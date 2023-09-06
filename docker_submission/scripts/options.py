@@ -8,7 +8,7 @@ def load_config():
     parser.add_argument("-o", "--output", required=True, type=str)
     parser.add_argument("-region", type=str, required=True, help="can be either 'brain' or 'abdom'.")
     parser.add_argument("-mode", type=str, default="pixel", help="can be either 'pixel' or 'sample'.", required=False)
-    parser.add_argument("-workspace", type=str, default="/home/ehuijben/ownCloud2/Code/models/202306_OOD/mood/docker_example/scripts")
+    parser.add_argument("-workspace", type=str, required=True)
 
     args = parser.parse_args()
     
@@ -29,17 +29,5 @@ def load_config():
     config.task = args.region
     config.mode = args.mode
     config.hist_dir = os.path.join(args.workspace, 'histogram') 
-
-    print()
-    print('************* TEST GPU ********************')
-    import torch
-    print('CUDA AVAILABLE:', torch.cuda.is_available())
-    config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print('DEVICE:', config.device)
-    test_gpu = torch.ones((1,)).to(config.device)
-    print('TENSOR DEVICE', test_gpu.device)
-    
-    print('*******************************************')
-    print()
     
     return config

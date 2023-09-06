@@ -5,10 +5,8 @@ import torchio as tio
 import torch
 import torch.nn.functional as F
 from torch.cuda.amp import autocast
-# from monai.utils import set_determinism
 import numpy as np
 import os
-# import pathlib
 import sys
 
 sys.path.append('/workspace/ddpm_ood')
@@ -27,56 +25,8 @@ from generative.networks.schedulers import PNDMScheduler
 from post_processing.utils import segment, ssim_pad
 from data import upsample
 
-# # TODO : remove plot function
-# import matplotlib.pyplot as plt
-# def show_image_mask(image_array, thresholded_image):
-    
-#     slice_id=[np.argmax(thresholded_image.sum((0,1))), 120]
-    
-    
-#     # Display the original image and the segmented masks
-#     fig, axs = plt.subplots(1, 2, figsize=(5, 5))
-#     axs[0].imshow(np.concatenate((image_array[:,:, slice_id[0]],image_array[:,:, slice_id[1]])), cmap='gray')
-#     axs[0].set_title('Original Image')
-#     axs[0].axis('off')
-#     axs[1].imshow(np.concatenate((thresholded_image[:,:, slice_id[0]],thresholded_image[:,:, slice_id[1]])), cmap='gray')
-#     axs[1].set_title(f'result (sum={thresholded_image.sum()})')
-#     axs[1].axis('off')
-#     plt.tight_layout()
-#     plt.show()
-    
-    
-# def show_image_mask_fancy(image_array, recon, metric_map, thresholded_image, name):
-    
-#     slice_id=[np.argmax(thresholded_image.sum((0,1))), 120]
-    
-#     import matplotlib.pyplot as plt
-#     # Display the original image and the segmented masks
-#     fig, axs = plt.subplots(1, 4, figsize=(10, 5))
-#     obj = axs[0].imshow(np.concatenate((image_array[:,:, slice_id[0]],image_array[:,:, slice_id[1]])), cmap='gray')
-#     plt.colorbar(obj, ax=axs[0], fraction=0.05)
-#     axs[0].set_title('Original Image')
-#     axs[0].axis('off')
-    
-#     obj = axs[1].imshow(np.concatenate((recon[:,:, slice_id[0]],recon[:,:, slice_id[1]])), cmap='gray')
-#     plt.colorbar(obj, ax=axs[1], fraction=0.05)
-#     axs[1].set_title('Reconstruction')
-#     axs[1].axis('off')
-    
-#     obj = axs[2].imshow(np.concatenate((metric_map[:,:, slice_id[0]],metric_map[:,:, slice_id[1]])), vmin=0, vmax=1, cmap='RdYlGn')
-#     plt.colorbar(obj, ax=axs[2], fraction=0.05)
-#     axs[2].set_title('SSIM')
-#     axs[2].axis('off')
-    
-#     obj = axs[3].imshow(np.concatenate((thresholded_image[:,:, slice_id[0]],thresholded_image[:,:, slice_id[1]])), cmap='gray')
-#     axs[3].set_title(f'result (sum={thresholded_image.sum()})')
-#     plt.colorbar(obj, ax=axs[3], fraction=0.05)
-#     axs[3].axis('off')
-#     plt.tight_layout()
-#     plt.savefig(name, dpi=300)
-#     plt.show()
-
-
+# # TODO : remove plot functions for docker
+# from plots import create_qualitative_results, create_histogram_plot_paper
 
 class ReconstructMoodSubmission(BaseTrainer):
     def __init__(self, args):
@@ -103,7 +53,8 @@ class ReconstructMoodSubmission(BaseTrainer):
                                             )
 
         
-    def easy_localization(self, image, n_std_outlier=4):
+    def easy_localization(self, batch, n_std_outlier=4):
+        image = batch["image"][tio.DATA].float()
         if self.config.task == 'brain':
             std_th = 64
         else:
@@ -133,17 +84,6 @@ class ReconstructMoodSubmission(BaseTrainer):
         if len(spike_inds) > 0  and spike_inds[0] == 0:
             spike_inds = spike_inds[1:]
 
-        # # TODO remove plot
-        # plt.figure(figsize=(20,5))
-        # plt.plot(bins[1:],hist_mean, label='mean')
-        # plt.plot(bins[1:], hist_mean + 4* hist_std, label='4std upper')
-        # plt.plot(bins[1:], hist, label='subject')
-        # plt.plot(bins[spike_inds], [0]* len(spike_inds), 'r*')
-        # plt.ylim([0, 50000])
-        # plt.xlim([0,1])
-        # plt.legend()
-        # plt.show()
-        
         # Threshold image based on outlier spikes
         thresholded_image = np.zeros(image_data.shape, dtype=np.uint8)
         if len(spike_inds)> 0:
@@ -173,6 +113,9 @@ class ReconstructMoodSubmission(BaseTrainer):
             structure_size = 6
             thresholded_image = binary_erosion(thresholded_image, np.ones((structure_size,structure_size,structure_size)))
             thresholded_image = binary_dilation(thresholded_image, np.ones((structure_size,structure_size,structure_size)))
+            
+            # # TODO : remove plot
+            # create_histogram_plot_paper(bins,hist, hist_mean, hist_std, batch, image, thresholded_image, self.config)
             return thresholded_image.astype(np.uint8)
         else:
             return thresholded_image
@@ -264,7 +207,8 @@ class ReconstructMoodSubmission(BaseTrainer):
     
 
     
-    def process_reconstruction(self, gt, recon):
+    def process_reconstruction(self, batch, recon):
+        gt = batch["image"][tio.DATA].float().squeeze().cpu().numpy()
         result = recon[..., 0]
     
         # Calculate body mask
@@ -288,18 +232,17 @@ class ReconstructMoodSubmission(BaseTrainer):
     
 
     def score_one_case(self, batch):
-        input_image = batch["image"][tio.DATA].float()
         if self.easy_detection:
             ############################
             # easy detection
             ############################
             print('    Easy local started ...', batch['path'])
-            easy_result = self.easy_localization(input_image)
+            easy_result = self.easy_localization(batch)
             print('    Easy local finished. sum=', easy_result.sum() )
              
             
-            # #TODO : remove plot
-            # show_image_mask(input_image.squeeze(), easy_result, name)
+            # # TODO : remove plot
+            # create_qualitative_results(batch, None, None, easy_result, self.config)
             if easy_result.any():
                 print('    Easy local found!')
                 if self.config.task == 'brain':
@@ -312,14 +255,11 @@ class ReconstructMoodSubmission(BaseTrainer):
         ############################
         # ddpm detection
         ############################
-        print('    DDPM started ...',  batch['path'])
         ddpm_recon = self.ddpm_localization(batch)
-        print('    DDPM reconstruction finished. Shape=', ddpm_recon.shape, 'min=', ddpm_recon.min(), 'max=', ddpm_recon.max())
-        ddpm_result, ssim_map = self.process_reconstruction(input_image.squeeze().cpu().numpy(), ddpm_recon)
-        print('    DDPM reconstruction processed. Shape=',  ddpm_result.shape, 'sum=', ddpm_result.sum(), 'min=', ddpm_result.min(), 'max=', ddpm_result.max())
+        ddpm_result, ssim_map = self.process_reconstruction(batch, ddpm_recon)
         
         # #TODO : remove plot
-        # show_image_mask_fancy(input_image.squeeze(), ddpm_recon, ssim_map, ddpm_result)
+        # create_qualitative_results(batch, ddpm_recon, ssim_map, ddpm_result, self.config)
         
         
         if self.config.task == 'brain':
