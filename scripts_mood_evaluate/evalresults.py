@@ -6,6 +6,7 @@ import traceback
 import nibabel as nib
 import numpy as np
 from sklearn import metrics
+from tqdm import tqdm
 
 
 class InvalidPredictionException(Exception):
@@ -102,18 +103,16 @@ def eval_list(pred_file_list, label_file_list, mode="pixel"):
     label_vals = []
     pred_vals = []
 
-    for pred_path, label_path in zip(pred_file_list, label_file_list):
-        print('    pred fname', pred_path, os.path.isfile(pred_path))
-        print('    label fname', label_path, os.path.isfile(label_path))
+    for pred_path, label_path in tqdm(zip(pred_file_list, label_file_list)):
+        if not os.path.isfile(pred_path):
+            print('Pred path not existing', pred_path)
+        if not os.path.isfile(label_path):
+            print('Label path not existing', label_path)
         try:
             if mode == "pixel":
-                print('    processing file pixelwise ....')
                 pred_list, label_list = process_file_pixelwise(pred_path, label_path)
-                print('    pixelwise pred finished')
             elif mode == "sample":
-                print('    processing file samplewise ....')
                 pred_list, label_list = process_file_samplewise(pred_path, label_path)
-                print('    sample pred finished')
             else:
                 print('mode not pixel or sample')
                 pred_list, label_list = []
@@ -134,8 +133,6 @@ def eval_dir(pred_dir, label_dir, mode="pixel", save_file=None):
     label_file_list = []
 
     for f_name in sorted(os.listdir(label_dir)):
-        
-        print(f'Evaluating {f_name}')
 
         pred_file_path = os.path.join(pred_dir, f_name)
         label_file_path = os.path.join(label_dir, f_name)

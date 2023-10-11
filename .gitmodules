@@ -1,12 +1,6 @@
-[submodule "docker_example/scripts/ddpm-ood"]
-	path = docker_example/scripts/ddpm-ood
-	url = git@github.com:evihuijben/ddpm-mood.git
 [submodule "docker_example/scripts/GenerativeModels"]
 	path = docker_example/scripts/GenerativeModels
 	url = git@github.com:Project-MONAI/GenerativeModels.git
 [submodule "docker_submission/scripts/GenerativeModels"]
 	path = docker_submission/scripts/GenerativeModels
 	url = git@github.com:Project-MONAI/GenerativeModels.git
-[submodule "docker_submission/scripts/ddpm_ood"]
-	path = docker_submission/scripts/ddpm_ood
-	url = git@github.com:evihuijben/ddpm_ood.git
